@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>株式会社Correctly | AIと専門家による次世代Web品質管理</title>
+    <title>Global Wings Alliance | 世界を、もっと身近に。</title>
     <style>
         /* --- 基本スタイル --- */
         body {
@@ -107,7 +107,7 @@
             height: 100%;
             object-fit: cover; /* 画像をセクション全体に引き伸ばす */
             z-index: -1; /* テキストの背後に移動 */
-            filter: brightness(0.4); /* 画像を暗くして文字を読みやすくする */
+            filter: brightness(0.5); /* 画像を暗くして文字を読みやすくする */
         }
         .hero .container {
             position: relative; /* z-indexを効かせるため */
@@ -166,7 +166,7 @@
             letter-spacing: 1px;
         }
 
-        /* --- 私たちの使命セクション --- */
+        /* --- 私たちの約束セクション --- */
         .mission-intro {
             text-align: center;
             max-width: 800px;
@@ -195,7 +195,7 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
         }
 
-        /* --- 「お悩み」セクション --- */
+        /* --- GWAが選ばれる理由セクション --- */
         .problems-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -219,7 +219,7 @@
             color: #005ab3;
         }
 
-        /* --- 「特長」セクション --- */
+        /* --- 旅の体験セクション --- */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -356,17 +356,17 @@
     <!-- ▼ヘッダー▼ -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">株式会社Correctly</div>
+            <div class="logo">Global Wings Alliance</div>
             <nav>
                 <ul>
-                    <li><a href="#service">サービス紹介</a></li>
-                    <li><a href="#pricing">料金プラン</a></li>
-                    <li><a href="#cases">導入事例</a></li>
-                    <li><a href="#about">会社概要</a></li>
+                    <li><a href="#booking">フライト予約</a></li>
+                    <li><a href="#network">就航都市</a></li>
+                    <li><a href="#experience">旅の体験</a></li>
+                    <li><a href="#loyalty">マイレージ</a></li>
                 </ul>
             </nav>
             <div class="header-cta">
-                <a href="#contact">資料請求</a>
+                <a href="#booking">今すぐ予約</a>
             </div>
         </div>
     </header>
@@ -375,96 +375,98 @@
         <!-- ▼メインビジュアル (バナー挿入) ▼ -->
         <section class="hero">
             <!-- 
-                ダミー画像のバナーを挿入しています。
-                サイズ(1600x600)、背景色(333=濃いグレー)、文字色(FFF=白)を指定しています。
-                本番ではこのsrcを実際の.jpegファイルのパスに変更してください。
+                ダミー画像のURLを、新しく作成したbannerフォルダへのパスに変更しました。
+                'banner/main_banner.jpeg' という名前の画像をアップロードすると、ここに表示されます。
             -->
-            <img src="https://placehold.co/1600x600/333333/FFFFFF?text=Brand+Image+Banner" alt="ブランドイメージバナー" class="hero-image">
+            <img src="banner/main_banner.jpeg" alt="GWA 航空機" class="hero-image">
             <div class="container">
-                <h1>言葉の品質が、<br>企業の未来を創る。</h1>
+                <h1>世界を、もっと身近に。</h1>
                 <p>
-                    デジタルの信頼は、細部に宿る。<br>
-                    AIと専門家が、貴社のWebサイトを「あるべき姿」へ導きます。
+                    Global Wings Alliance (GWA) で、<br>
+                    ワンランク上の空の旅をご体験ください。
                 </p>
-                <a href="#contact" class="cta-button">まずは無料で資料請求</a>
+                <a href="#booking" class="cta-button">フライトを検索・予約</a>
             </div>
         </section>
 
-        <!-- ▼私たちの使命 (ブランディング) ▼ -->
+        <!-- ▼私たちの約束 (ブランディング) ▼ -->
         <section id="mission" class="section">
             <div class="container">
-                <h2 class="section-title"><span>OUR MISSION</span>私たちが目指すもの</h2>
+                <h2 class="section-title"><span>OUR PROMISE</span>GWAの約束</h2>
                 <p class="mission-intro">
-                    デジタルの世界では、一つ一つの「言葉」が企業の顔となります。<br>
-                    私たちは、AIと人間の知性を融合させ、Web上に存在するすべてのコミュニケーションを正確で、信頼でき、そして価値あるものに変革します。<br>
-                    それが、株式会社Correctlyの使命です。
+                    私たちは、単なる移動手段を提供するのではありません。<br>
+                    最先端の安全性、心からのおもてなし、そして地球環境への配慮を通じて、<br>
+                    お客様一人ひとりの「特別な旅」をお手伝いすること。それがGWAの使命です。
                 </p>
                 <div class="mission-content">
                     <div class="mission-text">
-                        <h3>「信頼」を自動化するテクノロジー</h3>
-                        <p>上場企業にとって、Webサイトは単なる情報発信ツールではなく、投資家や顧客との重要な対話の場です。しかし、日々増え続けるコンテンツ、複雑化するガイドライン、複数の担当者による運用...。その中で「完璧な品質」を人の目だけで維持し続けることは、もはや不可能です。</p>
-                        <p>私たちのサービスは、この「品質管理」という属人的で膨大な作業を、AIによって自動化・仕組化します。表記揺れや誤字脱字といった単純なミスから、専門用語の統一、さらにはコンプライアンスに関わるリスク表現の検知まで。ヒューマンエラーの介在しない、一貫した品質基準をWebサイト全体に適用します。</p>
-                        <p>担当者は「チェック作業」から解放され、本来注力すべき「戦略的なコンテンツ制作」に時間を使うことができます。私たちは、テクノロジーの力で企業のコミュニケーションを加速させます。</p>
+                        <h3>比類なきグローバルネットワーク</h3>
+                        <p>GWAは、世界6大陸、150以上の都市を結ぶ広大なネットワークを誇ります。ビジネスでのご出張から、一生に一度のバケーションまで、あらゆる旅のニーズにお応えします。</p>
+                        <p>私たちは、最新鋭の低燃費航空機を積極的に導入し、快適なキャビン環境をご提供すると同時に、サステナビリティ（持続可能性）を追求しています。2050年までのカーボンニュートラル達成に向け、SAF（持続可能な航空燃料）の利用を推進し、空の未来に責任を持ちます。</p>
+                        <p>安全性は、私たちのDNAに刻まれた最優先事項です。世界最高水準の運航基準と訓練を受けたクルーが、皆様の空の旅を最初から最後までお守りします。</p>
                     </div>
                     <div class="mission-image">
-                        <!-- ダミーの画像（テクノロジーイメージ） -->
-                        <img src="https://placehold.co/450x350/EAF5FF/005AB3?text=Technology+for+Trust" alt="信頼を自動化するテクノロジー">
+                        <!-- 
+                            ダミー画像のURLを、bannerフォルダへのパスに変更しました。
+                            'banner/network_image.jpeg' という名前の画像をアップロードすると、ここに表示されます。
+                        -->
+                        <img src="banner/network_image.jpeg" alt="グローバルネットワーク">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ▼なぜ今、Web品質が問われるのか？ (旧お悩み) ▼ -->
-        <section id="problems" class="section">
+        <!-- ▼GWAが選ばれる理由▼ -->
+        <section id="network" class="section">
             <div class="container">
-                <h2 class="section-title"><span>RISKS</span>なぜ今、Web品質が問われるのか？</h2>
+                <h2 class="section-title"><span>WHY GWA?</span>GWAが選ばれる理由</h2>
                 <div class="problems-grid">
                     <div class="problem-card">
-                        <h3>属人化したチェック体制</h3>
-                        <p>「担当者のAさんしか分からない」ルールが多発。基準がバラバラで、些細な誤字や表記揺れが放置されていませんか？その小さなミスが、企業の信頼性を静かに損ねています。</p>
+                        <h3>世界最高水準の安全性</h3>
+                        <p>国際的な安全評価機関から最高評価を連続で獲得。徹底したメンテナンスと先進の運航システムで、お客様の安全を第一に考えます。</p>
                     </div>
                     <div class="problem-card">
-                        <h3>深刻なコンプライアンスリスク</h3>
-                        <p>意図せずとも、景品表示法や薬機法に抵触する「攻めすぎた表現」を使っていませんか？SNSでの炎上や行政指導のリスクは、企業の存続に関わる重大な問題です。</p>
+                        <h3>五感を満たすおもてなし</h3>
+                        <p>各国の文化を取り入れた機内食、厳選されたエンターテイメント、そして心温まる客室乗務員のサービス。空の上で、最上のリラックスをご提供します。</p>
                     </div>
                     <div class="problem-card">
-                        <h3>機会損失を生む「チェック工数」</h3>
-                        <p>コンテンツ公開前の「目視チェック」に、マーケティング部門の貴重なリソースが割かれていませんか？その時間は、本来もっと創造的な業務に使えるはずです。</p>
+                        <h3>シームレスな旅の接続</h3>
+                        <p>世界中の主要ハブ空港を拠点に、スムーズな乗り継ぎを実現。GWAアライアンスパートナーとの連携で、ストレスフリーな旅をお約束します。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ▼サービスの特長▼ -->
-        <section id="service" class="section">
+        <!-- ▼旅の体験▼ -->
+        <section id="experience" class="section">
             <div class="container">
-                <h2 class="section-title"><span>FEATURES</span>Correctlyが選ばれる3つの理由</h2>
+                <h2 class="section-title"><span>EXPERIENCE</span>最上の旅の体験</h2>
                 <div class="features-grid">
                     <div class="feature-item">
-                        <div class="icon">⚙️</div>
-                        <h3>貴社専用の校正エンジン</h3>
-                        <p>一般的な校正ツールではありません。貴社のブランドブックやIR情報に基づき、「貴社だけの」専用辞書をAIに学習させ、独自の品質基準を構築します。</p>
+                        <div class="icon">👑</div>
+                        <h3>ファーストクラス</h3>
+                        <p>雲の上のプライベートスイート。フルフラットベッドと専属シェフによるお食事で、目的地に着くまで、まるでご自宅のようにおくつろぎいただけます。</p>
                     </div>
                     <div class="feature-item">
-                        <div class="icon">👥</div>
-                        <h3>AIと専門家のハイブリッド体制</h3>
-                        <p>AIが網羅的に検知し、専門家が文脈やニュアンスを最終判断。機械の速さと人間の知性を組み合わせ、機械だけでは不可能な「伝わる品質」を実現します。</p>
+                        <div class="icon">💼</div>
+                        <h3>ビジネスクラス</h3>
+                        <p>ビジネスと休息を両立する空間。優先搭乗、ラウンジへのアクセス、そして集中できるワークスペースが、多忙な皆様の旅をサポートします。</p>
                     </div>
                     <div class="feature-item">
-                        <div class="icon">🔗</div>
-                        <h3>CMS連携でシームレスな運用</h3>
-                        <p>主要なCMSとのAPI連携に標準対応。記事の作成・編集画面でリアルタイムに校正が実行され、現在の運用フローを一切変えることなく導入可能です。</p>
+                        <div class="icon">✈️</div>
+                        <h3>エコノミークラス</h3>
+                        <p>人間工学に基づいた設計のシートと、充実した機内エンターテイメント。快適さと機能性を追求した空間で、長距離のフライトも快適にお過ごしいただけます。</p>
                     </div>
                 </div>
             </div>
         </section>
         
         <!-- ▼CTA (行動喚起) セクション▼ -->
-        <section id="contact" class="section cta-section">
+        <section id="booking" class="section cta-section">
             <div class="container">
-                <h2 class="section-title"><span>CONTACT</span>Webサイトの品質が、<br>企業の信頼を左右する時代です。</h2>
-                <p>些細なミスが大きな損失に繋がる前に、まずはWebサイトの現状を把握しませんか？専門家が貴社のWebサイトを簡易診断するサービスも無料で実施中です。</p>
-                <a href="#contact-form" class="cta-button">無料診断・資料請求はこちら</a>
+                <h2 class="section-title"><span>BOOK NOW</span>次の旅の計画を始めませんか？</h2>
+                <p>GWAが誇るグローバルネットワークで、あなたの「行きたい」を現実に。今すぐお得な運賃をチェックして、次の冒険へ出発しましょう。</p>
+                <a href="#booking-form" class="cta-button">フライト検索・予約はこちら</a>
             </div>
         </section>
 
@@ -476,13 +478,15 @@
             <nav>
                  <ul>
                     <li><a href="#">プライバシーポリシー</a></li>
-                    <li><a href="#">運営会社</a></li>
+                    <li><a href="#">運送約款</a></li>
+                    <li><a href="#">会社概要</a></li>
                 </ul>
             </nav>
-            <small>&copy; 2025 Correctly Inc. All Rights Reserved.</small>
+            <small>&copy; 2025 Global Wings Alliance. All Rights Reserved.</small>
         </div>
     </footer>
 
 </body>
 </html>
+
 
