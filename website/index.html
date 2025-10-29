@@ -4,37 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Wings Alliance | 世界を、もっと身近に。</title>
+    <!-- Google Fontsの導入（Open Sans: 本文、Playfair Display: 見出し） --><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* --- 基本スタイル --- */
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
             margin: 0;
-            color: #333;
-            background: #f9f9f9;
-            line-height: 1.7;
+            color: #2c3e50; /* ダークネイビー系の落ち着いた色 */
+            background: #fcfcfc; /* オフホワイト系の背景色 */
+            line-height: 1.8;
+            font-weight: 400;
         }
         .container {
-            max-width: 1100px;
+            max-width: 1200px; /* 少し広めに */
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 30px; /* 左右の余白を少し広げる */
         }
         a {
-            color: #005ab3;
+            color: #0056b3; /* 標準リンク色 */
             text-decoration: none;
+            transition: color 0.3s ease;
         }
         a:hover {
+            color: #003d80;
             text-decoration: underline;
         }
         img {
             max-width: 100%;
             height: auto;
+            display: block; /* 画像下の余白をなくす */
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif; /* 見出しはエレガントなセリフ体 */
+            color: #1a2c3e; /* より深い色 */
+            font-weight: 700;
         }
 
         /* --- ヘッダー --- */
         .header {
             width: 100%;
-            background: #fff;
-            border-bottom: 1px solid #eee;
+            background: rgba(255, 255, 255, 0.95); /* 半透明にして高級感を演出 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* 軽い影で浮遊感を */
             position: fixed;
             top: 0;
             left: 0;
@@ -44,15 +54,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 70px;
+            height: 80px; /* ヘッダーの高さを少し高く */
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 30px;
         }
         .header .logo {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #005ab3;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em; /* ロゴのサイズアップ */
+            font-weight: 700;
+            color: #004080; /* 深い青色 */
+            letter-spacing: 0.5px;
         }
         .header nav ul {
             margin: 0;
@@ -61,43 +73,67 @@
             display: flex;
         }
         .header nav li {
-            margin-left: 30px;
+            margin-left: 40px; /* ナビ間隔を広げる */
         }
         .header nav a {
             text-decoration: none;
-            color: #333;
-            font-weight: bold;
+            color: #555;
+            font-weight: 600; /* 太字 */
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 5px; /* 下線のために余白確保 */
         }
-        .header .header-cta a {
-            background: #ff5a00;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
+        .header nav a:hover {
+            color: #004080;
             text-decoration: none;
-            font-weight: bold;
-            transition: opacity 0.3s;
+        }
+        .header nav a::after { /* ホバー時の下線アニメーション */
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: #004080;
+            transition: width 0.3s ease;
+        }
+        .header nav a:hover::after {
+            width: 100%;
+        }
+
+        .header .header-cta a {
+            background: #b8860b; /* ゴールド系のCTAボタン */
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: background 0.3s ease, transform 0.2s ease;
         }
         .header .header-cta a:hover {
-            opacity: 0.8;
+            background: #a37307;
+            transform: translateY(-2px);
             text-decoration: none;
         }
         
         /* メインコンテンツはヘッダーの高さ分だけ下げる */
         main {
-            padding-top: 70px;
+            padding-top: 80px;
         }
 
         /* --- メインビジュアル (ヒーローセクション) --- */
         .hero {
-            position: relative; /* 画像を背後に配置するための基準点 */
+            position: relative;
             color: #fff;
             text-align: left;
-            padding: 120px 0; /* 高さを確保 */
+            padding: 150px 0; /* 上下の余白をさらに広げる */
             display: flex;
             align-items: center;
-            min-height: 450px;
+            min-height: 550px; /* 最低高を確保 */
             box-sizing: border-box;
-            overflow: hidden; /* 画像がはみ出ないように */
+            overflow: hidden;
         }
         .hero-image {
             position: absolute;
@@ -105,170 +141,217 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 画像をセクション全体に引き伸ばす */
-            z-index: -1; /* テキストの背後に移動 */
-            filter: brightness(0.5); /* 画像を暗くして文字を読みやすくする */
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.4) grayscale(20%); /* 少し暗く、モノクロ感を加えて高級感を */
         }
         .hero .container {
-            position: relative; /* z-indexを効かせるため */
+            position: relative;
             z-index: 1;
         }
         .hero h1 {
-            font-size: 2.8em;
-            margin: 0 0 20px 0;
-            line-height: 1.4;
+            font-size: 3.5em; /* 見出しを大きく */
+            margin: 0 0 25px 0;
+            line-height: 1.3;
             font-weight: 700;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5); /* 文字に影をつけて読みやすく */
+            text-shadow: 0 3px 8px rgba(0,0,0,0.6); /* 影を強調 */
+            letter-spacing: 1px;
         }
         .hero p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            opacity: 0.9;
-            max-width: 600px; /* テキスト幅を制限して読みやすく */
-            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            font-size: 1.3em; /* 本文も少し大きく */
+            margin-bottom: 40px;
+            opacity: 0.95;
+            max-width: 700px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            line-height: 1.6;
         }
         .hero .cta-button {
-            background: #ff5a00;
+            background: #b8860b; /* ゴールド系のCTAボタン */
             color: #fff;
-            padding: 15px 40px;
-            border-radius: 5px;
+            padding: 18px 45px;
+            border-radius: 3px;
             text-decoration: none;
-            font-size: 1.1em;
-            font-weight: bold;
+            font-size: 1.2em;
+            font-weight: 700;
             display: inline-block;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            letter-spacing: 0.5px;
         }
         .hero .cta-button:hover {
+            background: #a37307;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
             text-decoration: none;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         /* --- 各セクション共通スタイル --- */
         .section {
-            padding: 80px 0;
+            padding: 100px 0; /* セクション間の余白を広げる */
         }
-        .section:nth-of-type(even) { /* 偶数セクションの背景色を変更 */
-            background: #fff;
+        .section:nth-of-type(even) {
+            background: #ffffff; /* 白い背景 */
         }
         .section-title {
             text-align: center;
-            font-size: 2.2em;
-            margin-bottom: 50px;
+            font-size: 2.8em; /* セクションタイトルを大きく */
+            margin-bottom: 80px; /* タイトル下の余白を広げる */
             font-weight: 700;
+            color: #1a2c3e;
+            letter-spacing: 1px;
         }
         .section-title span {
             display: block;
-            font-size: 0.5em;
-            color: #005ab3;
-            font-weight: bold;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
+            font-size: 0.45em; /* 英語サブタイトルは控えめに */
+            color: #004080; /* 深い青 */
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase; /* 大文字に */
+        }
+        p {
+            font-size: 1.05em; /* 本文のフォントサイズを微調整 */
+            color: #444;
         }
 
         /* --- 私たちの約束セクション --- */
         .mission-intro {
             text-align: center;
-            max-width: 800px;
-            margin: 0 auto 50px;
-            font-size: 1.1em;
+            max-width: 900px;
+            margin: 0 auto 70px;
+            font-size: 1.2em; /* 導入文を大きく */
+            line-height: 1.8;
+            color: #333;
         }
         .mission-content {
             display: flex;
-            align-items: center;
-            gap: 40px;
+            align-items: flex-start; /* 上揃え */
+            gap: 60px; /* 間隔を広げる */
         }
         .mission-text {
             flex: 1;
         }
         .mission-text h3 {
-            font-size: 1.5em;
-            color: #005ab3;
+            font-size: 1.8em; /* サブタイトルを大きく */
+            color: #004080;
             margin-top: 0;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        .mission-text p {
+            margin-bottom: 20px; /* 段落間の余白 */
         }
         .mission-image {
             flex: 1;
-            max-width: 450px;
+            max-width: 500px; /* 画像の最大幅を少し広げる */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* 影を強調 */
+            border-radius: 8px; /* 角を丸く */
+            overflow: hidden; /* 角丸を適用するため */
         }
         .mission-image img {
-            border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            width: 100%; /* 親要素に合わせて幅100% */
+            height: auto;
+            transition: transform 0.5s ease; /* ホバーで少し拡大 */
+        }
+        .mission-image:hover img {
+            transform: scale(1.03);
         }
 
         /* --- GWAが選ばれる理由セクション --- */
         .problems-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* カードサイズ調整 */
+            gap: 40px; /* 間隔を広げる */
         }
         .problem-card {
             background: #fff;
-            padding: 30px;
-            border: 1px solid #eee;
+            padding: 40px; /* パディングを広げる */
+            border: 1px solid #e0e0e0; /* 線の色を控えめに */
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08); /* 影を強調 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .problem-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-8px); /* ホバー時の浮き上がり */
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
         }
         .problem-card h3 {
-            font-size: 1.3em;
+            font-size: 1.5em; /* カード見出しを大きく */
             margin-top: 0;
-            color: #005ab3;
+            margin-bottom: 20px;
+            color: #004080;
+        }
+        .problem-card p {
+            font-size: 1.05em;
         }
 
         /* --- 旅の体験セクション --- */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px; /* 間隔をさらに広げる */
             text-align: center;
         }
+        .feature-item {
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
         .feature-item .icon {
-            font-size: 3.5em; /* 絵文字のサイズ調整 */
+            font-size: 4.5em; /* アイコンを大きく */
             line-height: 1;
+            color: #b8860b; /* ゴールド系のアイコン色 */
+            margin-bottom: 20px;
         }
         .feature-item h3 {
-            font-size: 1.3em;
+            font-size: 1.6em; /* 特長見出しを大きく */
             margin-top: 15px;
             font-weight: 700;
+            color: #1a2c3e;
+        }
+        .feature-item p {
+            font-size: 1.05em;
         }
 
         /* --- CTAセクション --- */
         .cta-section {
-            background: #eef5ff;
+            background: #f0f8ff; /* 控えめな青系の背景 */
             text-align: center;
+            padding: 100px 0;
         }
         .cta-section p {
-            max-width: 600px;
-            margin: 20px auto 30px;
-            font-size: 1.1em;
+            max-width: 700px;
+            margin: 25px auto 40px;
+            font-size: 1.2em; /* CTA本文を大きく */
+            line-height: 1.7;
+            color: #333;
         }
         .cta-section .cta-button {
-             background: #ff5a00;
+             background: #b8860b; /* ゴールド系のCTAボタン */
             color: #fff;
-            padding: 15px 40px;
-            border-radius: 5px;
+            padding: 18px 45px;
+            border-radius: 3px;
             text-decoration: none;
-            font-size: 1.1em;
-            font-weight: bold;
+            font-size: 1.2em;
+            font-weight: 700;
             display: inline-block;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            letter-spacing: 0.5px;
         }
         .cta-section .cta-button:hover {
+            background: #a37307;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
             text-decoration: none;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
 
         /* --- フッター --- */
         .footer {
-            background: #333;
-            color: #aaa;
-            padding: 40px 0;
+            background: #1a2c3e; /* ヘッダーと同じ深いネイビー */
+            color: #ccc;
+            padding: 50px 0;
+            text-align: center;
         }
         .footer-content {
             display: flex;
@@ -283,12 +366,16 @@
             display: flex;
         }
         .footer nav li {
-            margin-right: 20px;
+            margin-right: 25px;
         }
         .footer nav a {
-            color: #fff;
+            color: #aaa;
             text-decoration: none;
-            font-size: 0.9em;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+        .footer nav a:hover {
+            color: #fff;
         }
         .footer small {
             font-size: 0.9em;
@@ -296,7 +383,52 @@
         }
         
         /* --- レスポンシブ対応 --- */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) { /* タブレット対応 */
+            .container {
+                padding: 0 25px;
+            }
+            .header-content {
+                padding: 0 25px;
+            }
+            .hero {
+                padding: 100px 0;
+                min-height: 400px;
+            }
+            .hero h1 {
+                font-size: 2.8em;
+            }
+            .hero p {
+                font-size: 1.1em;
+            }
+            .hero .cta-button {
+                padding: 15px 35px;
+                font-size: 1.1em;
+            }
+            .section {
+                padding: 80px 0;
+            }
+            .section-title {
+                font-size: 2.2em;
+                margin-bottom: 60px;
+            }
+            .mission-intro {
+                font-size: 1.05em;
+                margin-bottom: 60px;
+            }
+            .mission-content {
+                flex-direction: column; /* タブレットでは縦積みに */
+                gap: 40px;
+            }
+            .mission-image {
+                max-width: 100%;
+            }
+            .problems-grid, .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) { /* スマホ対応 */
             .header-content {
                 flex-direction: column;
                 height: auto;
@@ -305,41 +437,53 @@
             .header nav {
                 margin-top: 15px;
             }
+            .header nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
             .header nav li {
-                margin: 0 10px;
+                margin: 5px 15px;
             }
             .header .header-cta {
-                display: none; /* スマホではCTAを非表示に（ハンバーガーメニュー等で対応推奨） */
+                display: none; /* スマホではヘッダーのCTAを非表示に */
             }
             main {
-                padding-top: 120px; /* スマホ時のヘッダー高さに合わせる */
+                padding-top: 140px; /* スマホ時のヘッダー高さに合わせる */
             }
 
             .hero {
-                padding: 80px 0;
-                min-height: 300px;
+                padding: 60px 0;
+                min-height: 280px;
                 text-align: center; /* スマホでは中央揃えに戻す */
             }
             .hero h1 {
-                font-size: 2em;
+                font-size: 2.2em;
             }
             .hero p {
                 font-size: 1em;
-                margin: 0 auto 30px; /* 中央揃え */
-            }
-
-            .mission-content {
-                flex-direction: column; /* スマホでは縦積みに */
-            }
-            .mission-image {
-                margin-top: 30px;
+                margin: 0 auto 30px;
                 max-width: 100%;
             }
 
+            .section {
+                padding: 60px 0;
+            }
             .section-title {
                 font-size: 1.8em;
+                margin-bottom: 40px;
             }
-            .features-grid {
+            .mission-intro {
+                font-size: 1em;
+                margin-bottom: 40px;
+            }
+            .mission-text h3 {
+                font-size: 1.3em;
+            }
+            .problem-card h3, .feature-item h3 {
+                font-size: 1.2em;
+            }
+            
+            .features-grid, .problems-grid {
                 grid-template-columns: 1fr; /* スマホでは1列に */
             }
 
@@ -347,14 +491,19 @@
                 flex-direction: column;
                 gap: 20px;
             }
+            .footer nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .footer nav li {
+                margin: 0;
+            }
         }
-
     </style>
 </head>
 <body>
 
-    <!-- ▼ヘッダー▼ -->
-    <header class="header">
+    <!-- ▼ヘッダー▼ --><header class="header">
         <div class="header-content">
             <div class="logo">Global Wings Alliance</div>
             <nav>
@@ -372,27 +521,26 @@
     </header>
 
     <main>
-        <!-- ▼メインビジュアル (バナー挿入) ▼ -->
-        <section class="hero">
+        <!-- ▼メインビジュアル (バナー挿入) ▼ --><section class="hero">
             <!-- 
                 ダミー画像のURLを、新しく作成したbannerフォルダへのパスに変更しました。
                 'banner/main_banner.jpeg' という名前の画像をアップロードすると、ここに表示されます。
-            -->
-            <img src="banner/main_banner.jpeg" alt="GWA 航空機" class="hero-image">
+                高級感を出すため、フィルターで色味を調整しています（CSS）。
+            --><img src="banner/main_banner.jpeg" alt="GWA 航空機" class="hero-image">
             <div class="container">
-                <h1>世界を、もっと身近に。</h1>
+                <h1>世界を、もっと身近に。<br>卓越した空の旅を。</h1>
                 <p>
                     Global Wings Alliance (GWA) で、<br>
-                    ワンランク上の空の旅をご体験ください。
+                    洗練されたサービスと比類なき安全性をご体験ください。<br>
+                    あなたの旅は、私たちと共に新たな高みへ。
                 </p>
                 <a href="#booking" class="cta-button">フライトを検索・予約</a>
             </div>
         </section>
 
-        <!-- ▼私たちの約束 (ブランディング) ▼ -->
-        <section id="mission" class="section">
+        <!-- ▼私たちの約束 (ブランディング) ▼ --><section id="mission" class="section">
             <div class="container">
-                <h2 class="section-title"><span>OUR PROMISE</span>GWAの約束</h2>
+                <h2 class="section-title"><span>OUR PROMISE</span>GWAの揺るぎない約束</h2>
                 <p class="mission-intro">
                     私たちは、単なる移動手段を提供するのではありません。<br>
                     最先端の安全性、心からのおもてなし、そして地球環境への配慮を通じて、<br>
@@ -400,86 +548,82 @@
                 </p>
                 <div class="mission-content">
                     <div class="mission-text">
-                        <h3>比類なきグローバルネットワーク</h3>
-                        <p>GWAは、世界6大陸、150以上の都市を結ぶ広大なネットワークを誇ります。ビジネスでのご出張から、一生に一度のバケーションまで、あらゆる旅のニーズにお応えします。</p>
-                        <p>私たちは、最新鋭の低燃費航空機を積極的に導入し、快適なキャビン環境をご提供すると同時に、サステナビリティ（持続可能性）を追求しています。2050年までのカーボンニュートラル達成に向け、SAF（持続可能な航空燃料）の利用を推進し、空の未来に責任を持ちます。</p>
-                        <p>安全性は、私たちのDNAに刻まれた最優先事項です。世界最高水準の運航基準と訓練を受けたクルーが、皆様の空の旅を最初から最後までお守りします。</p>
+                        <h3>比類なきグローバルネットワークと持続可能な未来への貢献</h3>
+                        <p>GWAは、世界6大陸、150以上の主要都市を結ぶ広大なネットワークを誇ります。ビジネスでのご出張から、人生を彩るバケーションまで、お客様のあらゆる旅のニーズに完璧にお応えします。</p>
+                        <p>私たちは、最新鋭の低燃費航空機を積極的に導入し、快適で静粛性の高いキャビン環境をご提供すると同時に、持続可能な未来への貢献を経営の最重要課題と位置付けています。2050年までのカーボンニュートラル達成に向け、SAF（持続可能な航空燃料）の利用を推進し、次世代へ美しい空と地球を繋ぐ責任を果たします。</p>
+                        <p>安全性は、GWAのDNAに深く刻まれた最優先事項です。世界最高水準の厳格な運航基準と、卓越した訓練を受けた熟練のクルーが、皆様の空の旅を最初から最後まで、揺るぎない信頼でお守りします。</p>
                     </div>
                     <div class="mission-image">
                         <!-- 
                             ダミー画像のURLを、bannerフォルダへのパスに変更しました。
                             'banner/network_image.jpeg' という名前の画像をアップロードすると、ここに表示されます。
-                        -->
-                        <img src="banner/network_image.jpeg" alt="グローバルネットワーク">
+                        --><img src="banner/network_image.jpeg" alt="グローバルネットワーク">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ▼GWAが選ばれる理由▼ -->
-        <section id="network" class="section">
+        <!-- ▼GWAが選ばれる理由▼ --><section id="network" class="section">
             <div class="container">
-                <h2 class="section-title"><span>WHY GWA?</span>GWAが選ばれる理由</h2>
+                <h2 class="section-title"><span>WHY GWA?</span>GWAが選ばれる、その理由</h2>
                 <div class="problems-grid">
                     <div class="problem-card">
-                        <h3>世界最高水準の安全性</h3>
-                        <p>国際的な安全評価機関から最高評価を連続で獲得。徹底したメンテナンスと先進の運航システムで、お客様の安全を第一に考えます。</p>
+                        <h3>比類なき安全実績</h3>
+                        <p>国際的な安全評価機関から最高評価を連続で獲得。徹底した安全管理体制と先進技術で、お客様に心からの安心をお届けします。</p>
                     </div>
                     <div class="problem-card">
-                        <h3>五感を満たすおもてなし</h3>
-                        <p>各国の文化を取り入れた機内食、厳選されたエンターテイメント、そして心温まる客室乗務員のサービス。空の上で、最上のリラックスをご提供します。</p>
+                        <h3>パーソナルなおもてなし</h3>
+                        <p>お客様一人ひとりのニーズを汲み取った、細やかなサービス。世界各国の文化を取り入れた機内食や、厳選されたエンターテイメントで、五感を満たす上質な時間をお届けします。</p>
                     </div>
                     <div class="problem-card">
-                        <h3>シームレスな旅の接続</h3>
-                        <p>世界中の主要ハブ空港を拠点に、スムーズな乗り継ぎを実現。GWAアライアンスパートナーとの連携で、ストレスフリーな旅をお約束します。</p>
+                        <h3>洗練された旅の接続性</h3>
+                        <p>世界中の主要ハブ空港を拠点に、GWAアライアンスパートナーとの強力な連携により、ストレスフリーでスムーズな乗り継ぎを実現。旅のあらゆる瞬間を優雅に演出します。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ▼旅の体験▼ -->
-        <section id="experience" class="section">
+        <!-- ▼旅の体験▼ --><section id="experience" class="section">
             <div class="container">
-                <h2 class="section-title"><span>EXPERIENCE</span>最上の旅の体験</h2>
+                <h2 class="section-title"><span>EXPERIENCE</span>GWAが提供する、最上の旅の体験</h2>
                 <div class="features-grid">
                     <div class="feature-item">
                         <div class="icon">👑</div>
                         <h3>ファーストクラス</h3>
-                        <p>雲の上のプライベートスイート。フルフラットベッドと専属シェフによるお食事で、目的地に着くまで、まるでご自宅のようにおくつろぎいただけます。</p>
+                        <p>究極のプライベート空間で、雲の上の別荘を。フルフラットベッド、ミシュラン星獲得シェフ監修のダイニング、パーソナルアテンダントによるきめ細やかなサービスで、比類なき快適さを追求します。</p>
                     </div>
                     <div class="feature-item">
                         <div class="icon">💼</div>
                         <h3>ビジネスクラス</h3>
-                        <p>ビジネスと休息を両立する空間。優先搭乗、ラウンジへのアクセス、そして集中できるワークスペースが、多忙な皆様の旅をサポートします。</p>
+                        <p>ビジネスの効率性と旅の喜びを両立。広々としたリクライニングシート、機内Wi-Fi、ラウンジへの優先アクセスなど、移動時間も有意義にお過ごしいただけるようサポートいたします。</p>
                     </div>
                     <div class="feature-item">
                         <div class="icon">✈️</div>
                         <h3>エコノミークラス</h3>
-                        <p>人間工学に基づいた設計のシートと、充実した機内エンターテイメント。快適さと機能性を追求した空間で、長距離のフライトも快適にお過ごしいただけます。</p>
+                        <p>人間工学に基づいた快適なシートと、多彩なオンデマンドエンターテイメント。長距離フライトでも疲労を感じさせない、心地よい空の旅をご提供します。</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- ▼CTA (行動喚起) セクション▼ -->
-        <section id="booking" class="section cta-section">
+        <!-- ▼CTA (行動喚起) セクション▼ --><section id="booking" class="section cta-section">
             <div class="container">
-                <h2 class="section-title"><span>BOOK NOW</span>次の旅の計画を始めませんか？</h2>
-                <p>GWAが誇るグローバルネットワークで、あなたの「行きたい」を現実に。今すぐお得な運賃をチェックして、次の冒険へ出発しましょう。</p>
+                <h2 class="section-title"><span>BOOK NOW</span>次の特別な旅を、今すぐ計画しませんか？</h2>
+                <p>Global Wings Allianceが誇るグローバルネットワークで、あなたの「行きたい」を最高の体験に。卓越したサービスと忘れられない空の旅が、あなたをお待ちしています。</p>
                 <a href="#booking-form" class="cta-button">フライト検索・予約はこちら</a>
             </div>
         </section>
 
     </main>
 
-    <!-- ▼フッター▼ -->
-    <footer class="footer">
+    <!-- ▼フッター▼ --><footer class="footer">
         <div class="container footer-content">
             <nav>
                  <ul>
                     <li><a href="#">プライバシーポリシー</a></li>
                     <li><a href="#">運送約款</a></li>
                     <li><a href="#">会社概要</a></li>
+                    <li><a href="#">採用情報</a></li>
                 </ul>
             </nav>
             <small>&copy; 2025 Global Wings Alliance. All Rights Reserved.</small>
@@ -488,5 +632,4 @@
 
 </body>
 </html>
-
 
