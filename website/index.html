@@ -43,7 +43,7 @@
         /* --- ヘッダー --- */
         .header {
             width: 100%;
-            background: rgba(255, 255, 255, 0.95); /* 半透明にして高級感を演出 */
+            background: rgba(255, 255, 255, 0.98); /* ほぼ不透明にして信頼感を強調 */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* 軽い影で浮遊感を */
             position: fixed;
             top: 0;
@@ -143,7 +143,9 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
-            filter: brightness(0.4) grayscale(20%); /* 少し暗く、モノクロ感を加えて高級感を */
+            /* バナーを明るくするため、フィルターを削除または調整 */
+            /* filter: brightness(0.4) grayscale(20%); */ 
+            filter: brightness(0.6); /* テキストの読みやすさを考慮し、少しだけ暗く */
         }
         .hero .container {
             position: relative;
@@ -287,25 +289,32 @@
         /* --- 旅の体験セクション --- */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 50px; /* 間隔をさらに広げる */
             text-align: center;
         }
         .feature-item {
-            padding: 20px;
+            padding: 30px; /* パディングを広げる */
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .feature-item .icon {
-            font-size: 4.5em; /* アイコンを大きく */
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        /* アイコンは削除されたため、このスタイルは不要 */
+        /* .feature-item .icon {
+            font-size: 4.5em; 
             line-height: 1;
-            color: #b8860b; /* ゴールド系のアイコン色 */
+            color: #b8860b;
             margin-bottom: 20px;
-        }
+        } */
         .feature-item h3 {
             font-size: 1.6em; /* 特長見出しを大きく */
-            margin-top: 15px;
+            margin-top: 0; /* アイコン削除で余白調整 */
+            margin-bottom: 15px;
             font-weight: 700;
             color: #1a2c3e;
         }
@@ -523,9 +532,8 @@
     <main>
         <!-- ▼メインビジュアル (バナー挿入) ▼ --><section class="hero">
             <!-- 
-                ダミー画像のURLを、新しく作成したbannerフォルダへのパスに変更しました。
-                'banner/main_banner.jpeg' という名前の画像をアップロードすると、ここに表示されます。
-                高級感を出すため、フィルターで色味を調整しています（CSS）。
+                メインビジュアルのバナー画像パスは変更なし。
+                CSSでフィルターを調整し、画像の明るさを高めました。
             --><img src="banner/main_banner.jpeg" alt="GWA 航空機" class="hero-image">
             <div class="container">
                 <h1>世界を、もっと身近に。<br>卓越した空の旅を。</h1>
@@ -554,10 +562,7 @@
                         <p>安全性は、GWAのDNAに深く刻まれた最優先事項です。世界最高水準の厳格な運航基準と、卓越した訓練を受けた熟練のクルーが、皆様の空の旅を最初から最後まで、揺るぎない信頼でお守りします。</p>
                     </div>
                     <div class="mission-image">
-                        <!-- 
-                            ダミー画像のURLを、bannerフォルダへのパスに変更しました。
-                            'banner/network_image.jpeg' という名前の画像をアップロードすると、ここに表示されます。
-                        --><img src="banner/network_image.jpeg" alt="グローバルネットワーク">
+                        <!-- ダミー画像のパスは変更なし --><img src="banner/network_image.jpeg" alt="グローバルネットワーク">
                     </div>
                 </div>
             </div>
@@ -588,18 +593,15 @@
                 <h2 class="section-title"><span>EXPERIENCE</span>GWAが提供する、最上の旅の体験</h2>
                 <div class="features-grid">
                     <div class="feature-item">
-                        <div class="icon">👑</div>
-                        <h3>ファーストクラス</h3>
+                        <!-- アイコン削除 --><h3>ファーストクラス</h3>
                         <p>究極のプライベート空間で、雲の上の別荘を。フルフラットベッド、ミシュラン星獲得シェフ監修のダイニング、パーソナルアテンダントによるきめ細やかなサービスで、比類なき快適さを追求します。</p>
                     </div>
                     <div class="feature-item">
-                        <div class="icon">💼</div>
-                        <h3>ビジネスクラス</h3>
+                        <!-- アイコン削除 --><h3>ビジネスクラス</h3>
                         <p>ビジネスの効率性と旅の喜びを両立。広々としたリクライニングシート、機内Wi-Fi、ラウンジへの優先アクセスなど、移動時間も有意義にお過ごしいただけるようサポートいたします。</p>
                     </div>
                     <div class="feature-item">
-                        <div class="icon">✈️</div>
-                        <h3>エコノミークラス</h3>
+                        <!-- アイコン削除 --><h3>エコノミークラス</h3>
                         <p>人間工学に基づいた快適なシートと、多彩なオンデマンドエンターテイメント。長距離フライトでも疲労を感じさせない、心地よい空の旅をご提供します。</p>
                     </div>
                 </div>
