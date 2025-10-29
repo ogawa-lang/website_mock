@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>株式会社Correctly | AIと専門家による次世代Web品質管理</title>
+    <style>
+        /* --- 基本スタイル --- */
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            margin: 0;
+            color: #333;
+            background: #f9f9f9;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        a {
+            color: #005ab3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- ヘッダー --- */
+        .header {
+            width: 100%;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #005ab3;
+        }
+        .header nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+        }
+        .header nav li {
+            margin-left: 30px;
+        }
+        .header nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .header .header-cta a {
+            background: #ff5a00;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: opacity 0.3s;
+        }
+        .header .header-cta a:hover {
+            opacity: 0.8;
+            text-decoration: none;
+        }
+        
+        /* メインコンテンツはヘッダーの高さ分だけ下げる */
+        main {
+            padding-top: 70px;
+        }
+
+        /* --- メインビジュアル (ヒーローセクション) --- */
+        .hero {
+            background: #005ab3;
+            color: #fff;
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .hero h1 {
+            font-size: 2.8em;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+        .hero p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .hero .cta-button {
+            background: #ff5a00;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .hero .cta-button:hover {
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- 各セクション共通スタイル --- */
+        .section {
+            padding: 80px 0;
+        }
+        .section:nth-of-type(odd) {
+            background: #fff;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 50px;
+            font-weight: 700;
+        }
+        .section-title span {
+            display: block;
+            font-size: 0.5em;
+            color: #005ab3;
+            font-weight: bold;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* --- 「お悩み」セクション --- */
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .problem-card {
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .problem-card h3 {
+            font-size: 1.3em;
+            margin-top: 0;
+            color: #005ab3;
+        }
+
+        /* --- 「特長」セクション --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            text-align: center;
+        }
+        .feature-item .icon {
+            font-size: 3.5em; /* 絵文字のサイズ調整 */
+            line-height: 1;
+        }
+        .feature-item h3 {
+            font-size: 1.3em;
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        /* --- CTAセクション --- */
+        .cta-section {
+            background: #eef5ff;
+            text-align: center;
+        }
+        .cta-section p {
+            max-width: 600px;
+            margin: 20px auto 30px;
+            font-size: 1.1em;
+        }
+        .cta-section .cta-button {
+             background: #ff5a00;
+            color: #fff;
+            padding: 15px 40px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cta-section .cta-button:hover {
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+
+        /* --- フッター --- */
+        .footer {
+            background: #333;
+            color: #aaa;
+            padding: 40px 0;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .footer nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+        }
+        .footer nav li {
+            margin-right: 20px;
+        }
+        .footer nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .footer small {
+            font-size: 0.9em;
+            color: #888;
+        }
+        
+        /* --- レスポンシブ対応 --- */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+            }
+            .header nav {
+                margin-top: 15px;
+            }
+            .header nav li {
+                margin: 0 10px;
+            }
+            .header .header-cta {
+                display: none; /* スマホではCTAを非表示に（ハンバーガーメニュー等で対応推奨） */
+            }
+            main {
+                padding-top: 120px; /* スマホ時のヘッダー高さに合わせる */
+            }
+            .hero h1 {
+                font-size: 2em;
+            }
+            .hero p {
+                font-size: 1em;
+            }
+            .section-title {
+                font-size: 1.8em;
+            }
+            .features-grid {
+                grid-template-columns: 1fr; /* スマホでは1列に */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ▼ヘッダー▼ -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">株式会社Correctly</div>
+            <nav>
+                <ul>
+                    <li><a href="#service">サービス紹介</a></li>
+                    <li><a href="#pricing">料金プラン</a></li>
+                    <li><a href="#cases">導入事例</a></li>
+                    <li><a href="#about">会社概要</a></li>
+                </ul>
+            </nav>
+            <div class="header-cta">
+                <a href="#contact">資料請求</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ▼メインビジュアル▼ -->
+        <section class="hero">
+            <div class="container">
+                <h1>そのWebサイト、企業の信頼を<br>守れていますか？</h1>
+                <p>AIと専門家による次世代Web品質管理で、<br>ブランド価値を向上させ、運用コストを削減します。</p>
+                <a href="#contact" class="cta-button">まずは無料で資料請求</a>
+            </div>
+        </section>
+
+        <!-- ▼こんなお悩みありませんか？▼ -->
+        <section id="problems" class="section">
+            <div class="container">
+                <h2 class="section-title"><span>PROBLEMS</span>Webサイトの品質管理で、<br>こんなお悩みありませんか？</h2>
+                <div class="problems-grid">
+                    <div class="problem-card">
+                        <h3>属人化したチェック体制</h3>
+                        <p>担当者によってチェック基準がバラバラ。些細な誤字や表記揺れが多発し、企業の信頼性を損ねていないか不安。</p>
+                    </div>
+                    <div class="problem-card">
+                        <h3>コンプライアンスリスク</h3>
+                        <p>薬機法や景表法など、意図せず法令に抵触する表現を使ってしまうリスクを常に抱えている。</p>
+                    </div>
+                    <div class="problem-card">
+                        <h3>膨大なチェック工数</h3>
+                        <p>サイトリニューアルやページ追加の度、膨大な量の目視チェックに忙殺され、本来の業務を圧迫している。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ▼サービスの特長▼ -->
+        <section id="service" class="section">
+            <div class="container">
+                <h2 class="section-title"><span>FEATURES</span>Correctlyが選ばれる3つの理由</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="icon">⚙️</div>
+                        <h3>貴社専用の校正エンジン</h3>
+                        <p>貴社独自の表記ルールやガイドラインをAIに学習させ、”貴社ならでは”の品質基準を実現します。</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">👥</div>
+                        <h3>AIと専門家のハイブリッド体制</h3>
+                        <p>AIの網羅性と、専門家の知見を組み合わせることで、機械では判断が難しい表現まで見逃しません。</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="icon">🔗</div>
+                        <h3>CMS連携でシームレスな運用</h3>
+                        <p>主要CMSとのAPI連携に対応。現在の運用フローを大きく変えることなく導入可能です。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- ▼CTA (行動喚起) セクション▼ -->
+        <section id="contact" class="section cta-section">
+            <div class="container">
+                <h2 class="section-title"><span>CONTACT</span>Webサイトの品質が、<br>企業の信頼を左右する時代です。</h2>
+                <p>些細なミスが大きな損失に繋がる前に、まずはWebサイトの現状を把握しませんか？専門家が貴社のWebサイトを簡易診断するサービスも無料で実施中です。</p>
+                <a href="#contact-form" class="cta-button">無料診断・資料請求はこちら</a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ▼フッター▼ -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <nav>
+                 <ul>
+                    <li><a href="#">プライバシーポリシー</a></li>
+                    <li><a href="#">運営会社</a></li>
+                </ul>
+            </nav>
+            <small>&copy; 2025 Correctly Inc. All Rights Reserved.</small>
+        </div>
+    </footer>
+
+</body>
+</html>
