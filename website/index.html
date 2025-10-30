@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Wings Alliance | 世界を、もっと身近に。</title>
-    <!-- Google Fontsの導入（Open Sans: 本文、Playfair Display: 見出し） --><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* --- 基本スタイル --- */
         body {
@@ -304,13 +306,6 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.08);
         }
-        /* アイコンは削除されたため、このスタイルは不要 */
-        /* .feature-item .icon {
-            font-size: 4.5em; 
-            line-height: 1;
-            color: #b8860b;
-            margin-bottom: 20px;
-        } */
         .feature-item h3 {
             font-size: 1.6em; /* 特長見出しを大きく */
             margin-top: 0; /* アイコン削除で余白調整 */
@@ -512,7 +507,9 @@
 </head>
 <body>
 
-    <!-- ▼ヘッダー▼ --><header class="header">
+    
+
+<header class="header">
         <div class="header-content">
             <div class="logo">Global Wings Alliance</div>
             <nav>
@@ -530,11 +527,12 @@
     </header>
 
     <main>
-        <!-- ▼メインビジュアル (バナー挿入) ▼ --><section class="hero">
-            <!-- 
-                メインビジュアルのバナー画像パスは変更なし。
-                CSSでフィルターを調整し、画像の明るさを高めました。
-            --><img src="banner/main_banner.jpeg" alt="GWA 航空機" class="hero-image">
+        
+
+<section class="hero">
+            
+
+<img src="banner/main_banner.jpeg" alt="GWA 航空機" class="hero-image">
             <div class="container">
                 <h1>世界を、もっと身近に。<br>卓越した空の旅を。</h1>
                 <p>
@@ -546,35 +544,60 @@
             </div>
         </section>
 
-        <!-- ▼私たちの約束 (ブランディング) ▼ --><section id="mission" class="section">
+        
+
+<section id="mission" class="section">
             <div class="container">
                 <h2 class="section-title"><span>OUR PROMISE</span>GWAの揺るぎない約束</h2>
                 <p class="mission-intro">
                     私たちは、単なる移動手段を提供するのではありません。<br>
                     最先端の安全性、心からのおもてなし、そして地球環境への配慮を通じて、<br>
-                    お客様一人ひとりの「特別な旅」をお手伝いすること。それがGWAの使命です。
+                    <!-- 変更点 1: 「一人ひとり」 (禁止語) -->
+                    お客様**一人ひとり**の「特別な旅」をお手伝いすること。それがGWAの使命です。
                 </p>
                 <div class="mission-content">
                     <div class="mission-text">
                         <h3>比類なきグローバルネットワークと持続可能な未来への貢献</h3>
                         <p>GWAは、世界6大陸、150以上の主要都市を結ぶ広大なネットワークを誇ります。ビジネスでのご出張から、人生を彩るバケーションまで、お客様のあらゆる旅のニーズに完璧にお応えします。</p>
-                        <p>私たちは、最新鋭の低燃費航空機を積極的に導入し、快適で静粛性の高いキャビン環境をご提供すると同時に、持続可能な未来への貢献を経営の最重要課題と位置付けています。2050年までのカーボンニュートラル達成に向け、SAF（持続可能な航空燃料）の利用を推進し、次世代へ美しい空と地球を繋ぐ責任を果たします。</p>
-                        <p>安全性は、GWAのDNAに深く刻まれた最優先事項です。世界最高水準の厳格な運航基準と、卓越した訓練を受けた熟練のクルーが、皆様の空の旅を最初から最後まで、揺るぎない信頼でお守りします。</p>
+                        <p>
+                            <!-- 変更点 2: 「CO2」 (非推奨表記) -->
+                            **CO2**排出削減は最重要課題であり、
+                            <!-- 変更点 3: 「カーボンニュートラル」 (非推奨語) -->
+                            2050年までの**カーボンニュートラル**達成に向け、
+                            <!-- 変更点 4: 「サステナブルアビエーションフューエル」 (非推奨語) -->
+                            SAF（**サステナブルアビエーションフューエル**）の利用を推進し、
+                            <!-- 変更点 5: 「繋ぐ」 (非推奨表記) -->
+                            次世代へ美しい空と地球を**繋ぐ**責任を果たします。
+                        </p>
+                        <p>
+                            安全性は、GWAのDNAに深く刻まれた最優先事項です。
+                            <!-- 変更点 6: 「運行」 (禁止語) -->
+                            世界最高水準の厳格な**運行**基準と、卓越した訓練を受けた熟練のクルーが、皆様の空の旅を最初から最後まで、揺るぎない信頼でお守りします。
+                        </p>
                     </div>
                     <div class="mission-image">
-                        <!-- ダミー画像のパスは変更なし --><img src="banner/network_image.jpeg" alt="グローバルネットワーク">
+                        
+
+<img src="banner/network_image.jpeg" alt="グローバルネットワーク">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ▼GWAが選ばれる理由▼ --><section id="network" class="section">
+        
+
+<section id="network" class="section">
             <div class="container">
                 <h2 class="section-title"><span>WHY GWA?</span>GWAが選ばれる、その理由</h2>
                 <div class="problems-grid">
                     <div class="problem-card">
                         <h3>比類なき安全実績</h3>
-                        <p>国際的な安全評価機関から最高評価を連続で獲得。徹底した安全管理体制と先進技術で、お客様に心からの安心をお届けします。</p>
+                        <!-- 変更点 7: 「言う」 (非推奨表記) -->
+                        <p>
+                            **言う**までもなく、国際的な安全評価機関から最高評価を連続で獲得。徹底した安全管理体制と先進技術で、
+                            <!-- 変更点 8: 「お客様」 (非推奨表記) -->
+                            **お客様**に心からの安心をお届けします。
+                        </p>
                     </div>
                     <div class="problem-card">
                         <h3>パーソナルなおもてなし</h3>
@@ -582,33 +605,44 @@
                     </div>
                     <div class="problem-card">
                         <h3>洗練された旅の接続性</h3>
-                        <p>世界中の主要ハブ空港を拠点に、GWAアライアンスパートナーとの強力な連携により、ストレスフリーでスムーズな乗り継ぎを実現。旅のあらゆる瞬間を優雅に演出します。</p>
+                        <!-- 変更点 9: 「及び」 (非推奨表記) -->
+                        <p>世界中の主要ハブ空港を拠点に、GWAアライアンスパートナーとの強力な連携により、ストレスフリーでスムーズな乗り継ぎを実現。旅のあらゆる瞬間**及び**体験を優雅に演出します。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ▼旅の体験▼ --><section id="experience" class="section">
+        
+
+<section id="experience" class="section">
             <div class="container">
                 <h2 class="section-title"><span>EXPERIENCE</span>GWAが提供する、最上の旅の体験</h2>
                 <div class="features-grid">
                     <div class="feature-item">
-                        <!-- アイコン削除 --><h3>ファーストクラス</h3>
+                        
+
+<h3>ファーストクラス</h3>
                         <p>究極のプライベート空間で、雲の上の別荘を。フルフラットベッド、ミシュラン星獲得シェフ監修のダイニング、パーソナルアテンダントによるきめ細やかなサービスで、比類なき快適さを追求します。</p>
                     </div>
                     <div class="feature-item">
-                        <!-- アイコン削除 --><h3>ビジネスクラス</h3>
+                        
+
+<h3>ビジナスクラス</h3>
                         <p>ビジネスの効率性と旅の喜びを両立。広々としたリクライニングシート、機内Wi-Fi、ラウンジへの優先アクセスなど、移動時間も有意義にお過ごしいただけるようサポートいたします。</p>
                     </div>
                     <div class="feature-item">
-                        <!-- アイコン削除 --><h3>エコノミークラス</h3>
-                        <p>人間工学に基づいた快適なシートと、多彩なオンデマンドエンターテイメント。長距離フライトでも疲労を感じさせない、心地よい空の旅をご提供します。</p>
+                        
+
+<h3>エコノミークラス</h3>
+                        <p>人間工学に基づいた快適なシートと、多彩なオンデMンドエンターテイメント。長距離フライトでも疲労を感じさせない、心地よい空の旅をご提供します。</p>
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- ▼CTA (行動喚起) セクション▼ --><section id="booking" class="section cta-section">
+        
+
+<section id="booking" class="section cta-section">
             <div class="container">
                 <h2 class="section-title"><span>BOOK NOW</span>次の特別な旅を、今すぐ計画しませんか？</h2>
                 <p>Global Wings Allianceが誇るグローバルネットワークで、あなたの「行きたい」を最高の体験に。卓越したサービスと忘れられない空の旅が、あなたをお待ちしています。</p>
@@ -618,7 +652,9 @@
 
     </main>
 
-    <!-- ▼フッター▼ --><footer class="footer">
+    
+
+<footer class="footer">
         <div class="container footer-content">
             <nav>
                  <ul>
@@ -626,6 +662,8 @@
                     <li><a href="#">運送約款</a></li>
                     <li><a href="#">会社概要</a></li>
                     <li><a href="#">採用情報</a></li>
+                    <!-- 変更点 10: 「ホームページ」 (非推奨語) -->
+                    <li><a href="#">公式**ホームページ**</a></li>
                 </ul>
             </nav>
             <small>&copy; 2025 Global Wings Alliance. All Rights Reserved.</small>
