@@ -1,358 +1,669 @@
-// content.js - WebページのDOMを操作して文言をチェック・ハイライトする
-// v2.8 - 例外リスト(exception_words)のロジックを強化
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Wings Alliance | 世界を、もっと身近に。</title>
+    
 
-(async () => {
-  // 1. 単一の "rules.json" を読み込む
-  const rules = await loadRules();
-  if (!rules) {
-    console.error('Web文言チェッカー: ルールの読み込みに失敗しました。');
-    return;
-  }
-
-  // 2. 初回スキャンを実行
-  await scanAndHighlight(document.body, rules);
-
-  // 3. (おまけ) ページが動的に変更された場合も監視する
-  const observer = new MutationObserver((mutations) => {
-    let needsScan = false;
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        // サイドバー自体の変更は無視する (v3.0の名残だが、安全のためキープ)
-        if (node.nodeType === 1 && node.id === 'web-checker-sidebar') {
-          return;
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 基本スタイル --- */
+        body {
+            font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            margin: 0;
+            color: #2c3e50; /* ダークネイビー系の落ち着いた色 */
+            background: #fcfcfc; /* オフホワイト系の背景色 */
+            line-height: 1.8;
+            font-weight: 400;
         }
-        if (node.nodeType === 1 || node.nodeType === 3) {
-          needsScan = true;
+        .container {
+            max-width: 1200px; /* 少し広めに */
+            margin: 0 auto;
+            padding: 0 30px; /* 左右の余白を少し広げる */
         }
-      });
-    });
+        a {
+            color: #0056b3; /* 標準リンク色 */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #003d80;
+            text-decoration: underline;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block; /* 画像下の余白をなくす */
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif; /* 見出しはエレガントなセリフ体 */
+            color: #1a2c3e; /* より深い色 */
+            font-weight: 700;
+        }
 
-    if(needsScan) {
-      scanAndHighlight(document.body, rules);
-    }
-  });
+        /* --- ヘッダー --- */
+        .header {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98); /* ほぼ不透明にして信頼感を強調 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* 軽い影で浮遊感を */
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px; /* ヘッダーの高さを少し高く */
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+        .header .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em; /* ロゴのサイズアップ */
+            font-weight: 700;
+            color: #004080; /* 深い青色 */
+            letter-spacing: 0.5px;
+        }
+        .header nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+        }
+        .header nav li {
+            margin-left: 40px; /* ナビ間隔を広げる */
+        }
+        .header nav a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600; /* 太字 */
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 5px; /* 下線のために余白確保 */
+        }
+        .header nav a:hover {
+            color: #004080;
+            text-decoration: none;
+        }
+        .header nav a::after { /* ホバー時の下線アニメーション */
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: #004080;
+            transition: width 0.3s ease;
+        }
+        .header nav a:hover::after {
+            width: 100%;
+        }
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-
-})();
-
-/**
- * 拡張機能内の "rules.json" を非同期で読み込む
- */
-async function loadRules() {
-  try {
-    const url = chrome.runtime.getURL('rules.json'); // 読み込むファイルを 'rules.json' に固定
-    const response = await fetch(url);
-    if (!response.ok) {
-      console.error('Web文言チェッカー: rules.json の読み込みに失敗しました。');
-      return null;
-    }
-    return await response.json();
-  } catch (e) {
-    console.error('Web文言チェッカー: ルール読み込みエラー:', e);
-    return null;
-  }
-}
-
-/**
- * 指定された要素（またはノード）以下をスキャンしてハイライトする
- * @param {Node} rootNode - スキャンを開始するDOMノード
- * @param {object} rules - ガイドラインルール
- */
-async function scanAndHighlight(rootNode, rules) {
-
-  // 正規表現で使用するルールを結合 (v2.6ロジック)
-  const combinedRegex = buildRegex(rules);
-  if (!combinedRegex) return; 
-  
-  // v2.7: 例外リストの正規表現を作成
-  const exceptionRegex = buildExceptionRegex(rules.exception_words);
-
-  // --- 1. テキストノードのスキャン (TreeWalker) ---
-  if (rootNode.nodeType === 3 || rootNode.nodeType === 1) {
-    const walker = document.createTreeWalker(
-      rootNode,
-      NodeFilter.SHOW_TEXT,
-      null,
-      false
-    );
-
-    let node;
-    const nodesToProcess = [];
-    while ((node = walker.nextNode())) {
-      nodesToProcess.push(node);
-    }
-
-    for (const node of nodesToProcess) {
-      const parentTag = node.parentElement ? node.parentElement.tagName.toLowerCase() : '';
-      if (parentTag === 'script' || parentTag === 'style' ||
-          (node.parentElement && node.parentElement.classList.contains('web-checker-highlight-forbidden')) ||
-          (node.parentElement && node.parentElement.classList.contains('web-checker-highlight-preferred'))
-      ) {
-        continue;
-      }
-
-      const text = node.nodeValue;
-      
-      // v2.8: v2.7の不完全な例外チェック (exceptionRegex.test(text)) は削除
-
-      if (!text || text.trim() === '' || !combinedRegex.test(text)) {
-        continue;
-      }
-
-      const parent = node.parentNode;
-      if (!parent) continue;
-
-      const fragment = document.createDocumentFragment();
-      let lastIndex = 0;
-      
-      // replaceメソッドを使って、マッチしたすべての箇所を処理
-      // v2.6の正規表現 `((?<!...)|(?<=...))(RuleWord)(?!...)` に基づき引数を整理
-      text.replace(combinedRegex, (match, g1, g2, offset) => {
-        // match = "素"
-        // g1 = 境界 (undefined or 助詞)
-        // g2 = "素" (ルールにマッチした単語本体)
-        // offset = マッチ位置
+        .header .header-cta a {
+            background: #b8860b; /* ゴールド系のCTAボタン */
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .header .header-cta a:hover {
+            background: #a37307;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
         
-        // v2.8: 例外チェックロジック
-        if (exceptionRegex) {
-            // マッチした単語(g2)が、例外単語("味の素"など)の一部でないかチェック
-            const re = new RegExp(exceptionRegex); // gフラグ付き
-            let m;
-            let isException = false;
-            while ((m = re.exec(text)) !== null) {
-                // 例外（例: "味の素"）が見つかった
-                const exceptionStart = m.index;
-                const exceptionEnd = m.index + m[0].length;
-                
-                // ルール単語（例: "素"）の開始・終了位置
-                const ruleStart = offset;
-                const ruleEnd = offset + g2.length;
-                
-                // ルール単語（"素"）が、例外単語（"味の素"）に「包含」されているか
-                if (ruleStart >= exceptionStart && ruleEnd <= exceptionEnd) {
-                    isException = true;
-                    break;
-                }
+        /* メインコンテンツはヘッダーの高さ分だけ下げる */
+        main {
+            padding-top: 80px;
+        }
+
+        /* --- メインビジュアル (ヒーローセクション) --- */
+        .hero {
+            position: relative;
+            color: #fff;
+            text-align: left;
+            padding: 150px 0; /* 上下の余白をさらに広げる */
+            display: flex;
+            align-items: center;
+            min-height: 550px; /* 最低高を確保 */
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.6); /* テキストの読みやすさを考慮し、少しだけ暗く */
+        }
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+        .hero h1 {
+            font-size: 3.5em; /* 見出しを大きく */
+            margin: 0 0 25px 0;
+            line-height: 1.3;
+            font-weight: 700;
+            text-shadow: 0 3px 8px rgba(0,0,0,0.6); /* 影を強調 */
+            letter-spacing: 1px;
+        }
+        .hero p {
+            font-size: 1.3em; /* 本文も少し大きく */
+            margin-bottom: 40px;
+            opacity: 0.95;
+            max-width: 700px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            line-height: 1.6;
+        }
+        .hero .cta-button {
+            background: #b8860b; /* ゴールド系のCTAボタン */
+            color: #fff;
+            padding: 18px 45px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 700;
+            display: inline-block;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .hero .cta-button:hover {
+            background: #a37307;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+
+        /* --- 各セクション共通スタイル --- */
+        .section {
+            padding: 100px 0; /* セクション間の余白を広げる */
+        }
+        .section:nth-of-type(even) {
+            background: #ffffff; /* 白い背景 */
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.8em; /* セクションタイトルを大きく */
+            margin-bottom: 80px; /* タイトル下の余白を広げる */
+            font-weight: 700;
+            color: #1a2c3e;
+            letter-spacing: 1px;
+        }
+        .section-title span {
+            display: block;
+            font-size: 0.45em; /* 英語サブタイトルは控えめに */
+            color: #004080; /* 深い青 */
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase; /* 大文字に */
+        }
+        p {
+            font-size: 1.05em; /* 本文のフォントサイズを微調整 */
+            color: #444;
+        }
+
+        /* --- 私たちの約束セクション --- */
+        .mission-intro {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 70px;
+            font-size: 1.2em; /* 導入文を大きく */
+            line-height: 1.8;
+            color: #333;
+        }
+        .mission-content {
+            display: flex;
+            align-items: flex-start; /* 上揃え */
+            gap: 60px; /* 間隔を広げる */
+        }
+        .mission-text {
+            flex: 1;
+        }
+        .mission-text h3 {
+            font-size: 1.8em; /* サブタイトルを大きく */
+            color: #004080;
+            margin-top: 0;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        .mission-text p {
+            margin-bottom: 20px; /* 段落間の余白 */
+        }
+        .mission-image {
+            flex: 1;
+            max-width: 500px; /* 画像の最大幅を少し広げる */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* 影を強調 */
+            border-radius: 8px; /* 角を丸く */
+            overflow: hidden; /* 角丸を適用するため */
+        }
+        .mission-image img {
+            width: 100%; /* 親要素に合わせて幅100% */
+            height: auto;
+            transition: transform 0.5s ease; /* ホバーで少し拡大 */
+        }
+        .mission-image:hover img {
+            transform: scale(1.03);
+        }
+
+        /* --- GWAが選ばれる理由セクション --- */
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* カードサイズ調整 */
+            gap: 40px; /* 間隔を広げる */
+        }
+        .problem-card {
+            background: #fff;
+            padding: 40px; /* パディングを広げる */
+            border: 1px solid #e0e0e0; /* 線の色を控えめに */
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08); /* 影を強調 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .problem-card:hover {
+            transform: translateY(-8px); /* ホバー時の浮き上がり */
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        .problem-card h3 {
+            font-size: 1.5em; /* カード見出しを大きく */
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #004080;
+        }
+        .problem-card p {
+            font-size: 1.05em;
+        }
+
+        /* --- ★変更：デモセクションのスタイル --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 50px; /* 間隔をさらに広げる */
+            text-align: left; /* 文章なので左揃え */
+        }
+        .feature-item {
+            padding: 30px; /* パディングを広げる */
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .feature-item h3 {
+            font-size: 1.6em; /* 特長見出しを大きく */
+            margin-top: 0;
+            margin-bottom: 20px; /* マージン調整 */
+            font-weight: 700;
+            color: #1a2c3e;
+            text-align: center; /* タイトルは中央揃え */
+        }
+        .feature-item p {
+            font-size: 1.0em; /* NGワードリストのフォントサイズ */
+            color: #555;
+            line-height: 1.8; /* 行間を広めに */
+        }
+        /* --- ★変更ここまで --- */
+
+
+        /* --- CTAセクション --- */
+        .cta-section {
+            background: #f0f8ff; /* 控えめな青系の背景 */
+            text-align: center;
+            padding: 100px 0;
+        }
+        .cta-section p {
+            max-width: 700px;
+            margin: 25px auto 40px;
+            font-size: 1.2em; /* CTA本文を大きく */
+            line-height: 1.7;
+            color: #333;
+        }
+        .cta-section .cta-button {
+             background: #b8860b; /* ゴールド系のCTAボタン */
+            color: #fff;
+            padding: 18px 45px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 700;
+            display: inline-block;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .cta-section .cta-button:hover {
+            background: #a37307;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+
+
+        /* --- フッター --- */
+        .footer {
+            background: #1a2c3e; /* ヘッダーと同じ深いネイビー */
+            color: #ccc;
+            padding: 50px 0;
+            text-align: center;
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .footer nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+        }
+        .footer nav li {
+            margin-right: 25px;
+        }
+        .footer nav a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+        .footer nav a:hover {
+            color: #fff;
+        }
+        .footer small {
+            font-size: 0.9em;
+            color: #888;
+        }
+        
+        /* --- レスポンシブ対応 --- */
+        @media (max-width: 992px) { /* タブレット対応 */
+            .container {
+                padding: 0 25px;
+            }
+            .header-content {
+                padding: 0 25px;
+            }
+            .hero {
+                padding: 100px 0;
+                min-height: 400px;
+            }
+            .hero h1 {
+                font-size: 2.8em;
+            }
+            .hero p {
+                font-size: 1.1em;
+            }
+            .hero .cta-button {
+                padding: 15px 35px;
+                font-size: 1.1em;
+            }
+            .section {
+                padding: 80px 0;
+            }
+            .section-title {
+                font-size: 2.2em;
+                margin-bottom: 60px;
+            }
+            .mission-intro {
+                font-size: 1.05em;
+                margin-bottom: 60px;
+            }
+            .mission-content {
+                flex-direction: column; /* タブレットでは縦積みに */
+                gap: 40px;
+            }
+            .mission-image {
+                max-width: 100%;
+            }
+            .problems-grid, .features-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) { /* スマホ対応 */
+            .header-content {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+            }
+            .header nav {
+                margin-top: 15px;
+            }
+            .header nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .header nav li {
+                margin: 5px 15px;
+            }
+            .header .header-cta {
+                display: none; /* スマホではヘッダーのCTAを非表示に */
+            }
+            main {
+                padding-top: 140px; /* スマホ時のヘッダー高さに合わせる */
+            }
+
+            .hero {
+                padding: 60px 0;
+                min-height: 280px;
+                text-align: center; /* スマホでは中央揃えに戻す */
+            }
+            .hero h1 {
+                font-size: 2.2em;
+            }
+            .hero p {
+                font-size: 1em;
+                margin: 0 auto 30px;
+                max-width: 100%;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+            .section-title {
+                font-size: 1.8em;
+                margin-bottom: 40px;
+            }
+            .mission-intro {
+                font-size: 1em;
+                margin-bottom: 40px;
+            }
+            .mission-text h3 {
+                font-size: 1.3em;
+            }
+            .problem-card h3, .feature-item h3 {
+                font-size: 1.2em;
             }
             
-            if (isException) {
-                // 例外（"味の素"）の一部だったので、ハイライトしない
-                if (offset > lastIndex) {
-                    fragment.appendChild(document.createTextNode(text.substring(lastIndex, offset)));
-                }
-                fragment.appendChild(document.createTextNode(g2)); // ハイライトせずテキストノードを戻す
-                lastIndex = offset + g2.length;
-                return; // replaceのコールバックを終了
+            .features-grid, .problems-grid {
+                grid-template-columns: 1fr; /* スマホでは1列に */
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .footer nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .footer nav li {
+                margin: 0;
             }
         }
-        
-        // 1. マッチした箇所の直前までのテキストノードを追加
-        if (offset > lastIndex) {
-          fragment.appendChild(document.createTextNode(text.substring(lastIndex, offset)));
-        }
-        
-        // 2. マッチした単語(g2)をハイライトするSPANを作成
-        const span = createHighlightSpan(g2, rules); // v2.8: exceptionRegex引数を削除
-        
-        fragment.appendChild(span);
-        
-        lastIndex = offset + g2.length;
-      });
+    </style>
+</head>
+<body>
 
-      // 3. 最後に残ったテキストノードを追加
-      if (lastIndex < text.length) {
-        fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
-      }
-      parent.replaceChild(fragment, node);
-    }
-  }
-
-  // --- 2. 画像(alt属性)のスキャン (querySelectorAll) ---
-  if (rootNode.nodeType === 1) { 
-    let images = [];
-    if (rootNode.tagName && rootNode.tagName.toLowerCase() === 'img') {
-      images.push(rootNode);
-    }
-    try {
-        images.push(...rootNode.querySelectorAll('img:not([class*="web-checker-highlight-image"])'));
-    } catch (e) {
-        // console.warn("Web文言チェッカー: querySelectorAllに失敗", e);
-    }
-
-    for (const img of images) {
-      const altText = img.alt;
-      if (!altText || altText.trim() === '' || !combinedRegex.test(altText)) {
-        continue;
-      }
-      
-      // v2.7: altTextが例外リストにマッチする場合はスキップ
-      if (exceptionRegex && exceptionRegex.test(altText)) {
-        continue;
-      }
-
-      // alt属性のテキストをチェック (v2.6ロジック)
-      const forbiddenRule = rules.forbidden_words.find(rule => rule.word && altText.includes(rule.word));
-      if (forbiddenRule) {
-          className = 'web-checker-highlight-image-forbidden';
-          title = `alt属性に禁止語: '${forbiddenRule.word}'`;
-          if (forbiddenRule.note) {
-            title += ` (${forbiddenRule.note})`;
-          }
-          foundForbidden = true;
-      }
-
-      // 推奨語チェック (厳格)
-      if (!foundForbidden) {
-          const preferredRule = rules.preferred_terms.find(term => term.old && altText.includes(term.old));
-          if (preferredRule) {
-              className = 'web-checker-highlight-image-preferred';
-              title = `alt属性に推奨語: '${preferredRule.old}' (→'${preferredRule.new}')`;
-              if (preferredRule.note) {
-                title += ` (${preferredRule.note})`;
-              }
-          }
-      }
-
-      img.classList.add(className);
-      img.title = title;
-    }
-  }
-}
-
-/**
- * ルールからハイライト用の正規表現（RegExp）を構築する (v2.5ロジック)
- * (単語境界(日本語助詞対応) + 大文字小文字区別)
- */
-function buildRegex(rules) {
-  const allWords = [];
-  if (rules.forbidden_words && Array.isArray(rules.forbidden_words)) {
-    allWords.push(...rules.forbidden_words.filter(rule => rule && typeof rule.word === 'string').map(rule => escapeRegExp(rule.word)));
-  }
-  if (rules.preferred_terms && Array.isArray(rules.preferred_terms)) {
-    allWords.push(...rules.preferred_terms.filter(term => term && typeof term.old === 'string').map(term => escapeRegExp(term.old)));
-  }
-
-  if (allWords.length === 0) return null;
-
-  try {
-    const validWords = allWords.filter(w => w.length > 0);
-    if (validWords.length === 0) return null;
-    // v2.6: 単語境界をチェックする正規表現を構築
-    // (A|B|C) を ((?<![\p{L}\p{N}_])|(?<=[のがをはてに。、]))(A|B|C)(?![\p{L}\p{N}_]) に変更
-    // 直前が「文字でない」OR「助詞・句読点である」場合にマッチ
-    const pattern = `((?<![\\p{L}\\p{N}_])|(?<=[のがをはてに。、]))(${validWords.join('|')})(?![\\p{L}\\p{N}_])`;
     
-    // 'g' (グローバル) と 'u' (ユニコード) フラグを使用
-    // 'i' (大文字小文字無視) は削除 (v2.5)
-    return new RegExp(pattern, 'gu'); 
-  } catch (e) {
-    console.error("Web文言チェッカー: 正規表現の構築に失敗しました。", e);
-    // 'u'フラグ非対応環境用のフォールバック (簡易的)
-    try {
-      // \p{L} などのUnicodeプロパティの代わりに、日本語の範囲を明示
-      // v2.6: 助詞対応
-      const pattern = `((?<![a-zA-Z0-9_ぁ-んァ-ヶ一-龠])|(?<=[のがをはてに。、]))(${validWords.join('|')})(?![a-zA-Z0-9_ぁ-んァ-ヶ一-龠])`;
-      return new RegExp(pattern, 'g');
-    } catch (e2) {
-      console.error("Web文言チェッカー: フォールバック正規表現も失敗。", e2);
-      return null;
-    }
-  }
-}
 
-/**
- * v2.7: 例外ワードリストから正規表現を構築する
- */
-function buildExceptionRegex(exceptionWords) {
-  if (!exceptionWords || !Array.isArray(exceptionWords) || exceptionWords.length === 0) {
-    return null;
-  }
-  try {
-    const validWords = exceptionWords
-      .filter(w => typeof w === 'string' && w.length > 0)
-      .map(escapeRegExp);
-      
-    if (validWords.length === 0) return null;
+<header class="header">
+        <div class="header-content">
+            <div class="logo">Global Wings Alliance</div>
+            <nav>
+                <ul>
+                    <li><a href="#booking">フライト予約</a></li>
+                    <li><a href="#network">就航都市</a></li>
+                    <li><a href="#experience">旅の体験</a></li>
+                    <li><a href="#loyalty">マイレージ</a></li>
+                </ul>
+            </nav>
+            <div class="header-cta">
+                <a href="#booking">今すぐ予約</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        
+
+<section class="hero">
+            
+
+<img src="banner/main_banner.jpeg" alt="GWA 航空機" class="hero-image">
+            <div class="container">
+                <h1>世界を、もっと身近に。<br>卓越した空の旅を。</h1>
+                <p>
+                    Global Wings Alliance (GWA) で、<br>
+                    洗練されたサービスと比類なき安全性をご体験ください。<br>
+                    あなたの旅は、私たちと共に新たな高みへ。
+                </p>
+                <a href="#booking" class="cta-button">フライトを検索・予約</a>
+            </div>
+        </section>
+
+        
+
+<section id="mission" class="section">
+            <div class="container">
+                <h2 class="section-title"><span>OUR PROMISE</span>GWAの揺るぎない約束</h2>
+                <p class="mission-intro">
+                    私たちは、単なる移動手段を提供するのではありません。<br>
+                    最先端の安全性、心からのおもてなし、そして地球環境への配慮を通じて、<br>
+                    <!-- 変更点 1: 「一人ひとり」 (禁止語) -->お客様一人ひとりの「特別な旅」をお手伝いすること。それがGWAの使命です。
+                </p>
+                <div class="mission-content">
+                    <div class="mission-text">
+                        <h3>比類なきグローバルネットワークと持続可能な未来への貢献</h3>
+                        <p>GWAは、世界6大陸、150以上の主要都市を結ぶ広大なネットワークを誇ります。ビジネスでのご出張から、人生を彩るバケーションまで、お客様のあらゆる旅のニーズに完璧にお応えします。</p>
+                        <p>
+                            <!-- 変更点 2: 「CO2」 (非推奨表記) -->CO2排出削減は最重要課題であり、
+                            <!-- 変更点 3: 「カーボンニュートラル」 (非推奨語) -->2050年までのカーボンニュートラル達成に向け、
+                            <!-- 変更点 4: 「サステナブルアビエーションフューエル」 (非推奨語) -->SAF（サステナブルアビエーションフューエル）の利用を推進し、
+                            <!-- 変更点 5: 「繋ぐ」 (非推奨表記) -->次世代へ美しい空と地球を繋ぐ責任を果たします。
+                        </p>
+                        <p>
+                            安全性は、GWAのDNAに深く刻まれた最優先事項です。
+                            <!-- 変更点 6: 「運行」 (禁止語) -->世界最高水準の厳格な運行基準と、卓越した訓練を受けた熟練のクルーが、皆様の空の旅を最初から最後まで、揺るぎない信頼でお守りします。
+                        </p>
+                    </div>
+                    <div class="mission-image">
+                        
+
+<img src="banner/network_image.jpeg" alt="グローバルネットワーク">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+
+<section id="network" class="section">
+            <div class="container">
+                <h2 class="section-title"><span>WHY GWA?</span>GWAが選ばれる、その理由</h2>
+                <div class="problems-grid">
+                    <div class="problem-card">
+                        <h3>比類なき安全実績</h3>
+                        <!-- 変更点 7: 「言う」 (非推奨表記) --><p>
+                            言うまでもなく、国際的な安全評価機関から最高評価を連続で獲得。徹底した安全管理体制と先進技術で、
+                            <!-- 変更点 8: 「お客様」 (非推奨表記) -->お客様に心からの安心をお届けします。
+                        </p>
+                    </div>
+                    <div class="problem-card">
+                        <h3>パーソナルなおもてなし</h3>
+                        <p>
+                            <!-- 変更点 9: 「様々」 (非推奨表記) -->様々なニーズを汲み取った、細やかなサービス。
+                            <!-- 変更点 10: 「美味しい」 (非推奨表記) -->美味しい機内食や、厳選されたエンターテイメントで、五感を満たす上質な時間をお届けします。
+                        </p>
+                    </div>
+                    <div class="problem-card">
+                        <h3>洗練された旅の接続性</h3>
+                        <!-- 変更点 11: 「及び」 (非推奨表記) --><p>世界中の主要ハブ空港を拠点に、GWAアライアンスパートナーとの強力な連携により、ストレスフリーでスムーズな乗り継ぎを実現。旅のあらゆる瞬間及び体験を優雅に演出します。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+
+<!-- ★★★ ここからセクション内容を変更 ★★★ --><section id="experience" class="section">
+    <div class="container">
+        <!-- タイトルをデモ用に変更 --><h2 class="section-title"><span>DEMO TEXT</span>校正デモンストレーション用テキスト</h2>
+        <div class="features-grid">
+            
+            <!-- カラム1: ご指定の文章1 + 追加文章 --><div class="feature-item">
+                <h3>デモテキスト：機内食</h3>
+                <p>
+                    弊社は味の素を使用した機内食を提供しています。
+                    出しの素を使用しています。
+                    スープの素もご用意しております。
+                </p>
+            </div>
+            
+            <!-- カラム2: ご指定の文章2 & 3 --><div class="feature-item">
+                <h3>デモテキスト：乗務員</h3>
+                <p>
+                    機内には素性を隠した乗務員がおりますがご了承ください。
+                    飛行途中に素の表情を見せるパイロットをお楽しみください。
+                </p>
+            </div>
+
+            <!-- カラム3: ご指定の文章4 --><div class="feature-item">
+                <h3>デモテキスト：サポート</h3>
+                <p>
+                    できる限り素晴らしいサポート再生をご用意いたしております。
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ★★★ セクション変更ここまで ★★★ --><section id="booking" class="section cta-section">
+            <div class="container">
+                <h2 class="section-title"><span>BOOK NOW</span>次の特別な旅を、今すぐ計画しませんか？</h2>
+                <p>Global Wings Allianceが誇るグローバルネットワークで、あなたの「行きたい」を最高の体験に。卓越したサービスと忘れられない空のLびが、あなたをお待ちしています。</p>
+                <a href="#booking-form" class="cta-button">フライト検索・予約はこちら</a>
+            </div>
+        </section>
+
+    </main>
+
     
-    // 例外リストは単純な「含む」チェックでよいため、単語境界は設定しない
-    const pattern = `(${validWords.join('|')})`;
-    // 大文字小文字も区別する（v2.5ロジックに合わせる）
-    return new RegExp(pattern, 'gu'); 
-  } catch (e) {
-    console.error("Web文言チェッカー: 例外リストの正規表現構築に失敗しました。", e);
-    return null;
-  }
-}
 
-/**
- * マッチした単語とルールに基づき、ハイライト用の<span>要素を作成する (v2.6ロジック)
- * (大文字小文字を区別して照合)
- * @param {string} match - マッチした単語
- * @param {object} rules - ルールオブジェクト
- */
-function createHighlightSpan(match, rules) {
-  
-  // v2.8: 例外チェックロジックを scanAndHighlight に移動したため、
-  // ここに来る match はハイライト対象確定
+<footer class="footer">
+        <div class="container footer-content">
+            <nav>
+                 <ul>
+                    <li><a href="#">プライバシーポリシー</a></li>
+                    <li><a href="#">運送約款</a></li>
+                    <li><a href="#">会社概要</a></li>
+                    <li><a href="#">採用情報</a></li>
+                </ul>
+            </nav>
+            <small>&copy; 2025 Global Wings Alliance. All Rights Reserved.</small>
+        </div>
+    </footer>
 
-  const span = document.createElement('span');
-  let title = '指摘あり';
-  let className = ''; 
-  let note = null;
-
-  // v2.5: toLowerCase() を使わずに、そのまま(match)照合する
-  // 推奨語をチェック
-  if (rules.preferred_terms && Array.isArray(rules.preferred_terms)) {
-    const preferred = rules.preferred_terms.find(term => term && term.old === match);
-    if (preferred) {
-      className = 'web-checker-highlight-preferred';
-      title = `推奨: '${preferred.new || '?'}' に変更`;
-      note = preferred.note;
-    }
-  }
-  
-  // 推奨語でない場合、禁止語をチェック
-  if (!className && rules.forbidden_words && Array.isArray(rules.forbidden_words)) {
-    const forbidden = rules.forbidden_words.find(rule => rule && rule.word === match);
-    if (forbidden) {
-      className = 'web-checker-highlight-forbidden';
-      title = `禁止語: ${forbidden.word}`;
-      note = forbidden.note;
-    }
-  }
-
-  // もしどちらでもない場合 (正規表現が(A|B)でマッチしたが、ルールリストにない場合)
-  // v2.5の厳格なロジックでは、ルールにないものはハイライトしない
-  if (!className) {
-     // v2.6の正規表現(g2)により、matchは必ずルールのどれかに一致するはず
-     return document.createTextNode(match); 
-  }
-
-  // 注釈（note）があれば、titleに追加
-  if (note) {
-    title += ` (${note})`;
-  }
-
-  span.className = className;
-  span.title = title;
-  span.textContent = match;
-  return span;
-}
-
-/**
- * 正規表現用の特殊文字をエスケープする
- */
-function escapeRegExp(string) {
-  if (typeof string !== 'string') {
-    console.warn('Web文言チェッカー: ルールに文字列でない値が含まれています。', string);
-    return '';
-  }
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-
+</body>
+</html>
 
